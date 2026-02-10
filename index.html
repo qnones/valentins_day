@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>💖 San Valentín 💖</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #ffb3b3, #ffd6d6);
+    }
+
+    .card {
+      background: white;
+      width: 90%;
+      max-width: 380px;
+      padding: 25px;
+      border-radius: 28px;
+      text-align: center;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .media {
+      width: 100%;
+      border-radius: 20px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      pointer-events: none; /* 🔑 CLAVE */
+    }
+
+    .media video {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 20px;
+    }
+
+    h1 {
+      color: #ff3b6f;
+      font-size: 24px;
+      margin-bottom: 25px;
+    }
+
+    .buttons {
+      position: relative;
+      height: 140px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 18px 30px;
+      border-radius: 30px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      white-space: nowrap;
+    }
+
+    #yes {
+      background: #ff3b6f;
+      color: white;
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%) scale(1);
+      transform-origin: center bottom;
+      z-index: 1;
+    }
+
+    #no {
+      background: #e0e0e0;
+      color: #333;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      transition: left 0.2s ease, top 0.2s ease, opacity 0.25s ease;
+      z-index: 20;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card" id="card">
+
+    <div class="media">
+      <video
+        src="video.mp4"
+        autoplay
+        loop
+        muted
+        playsinline
+      ></video>
+    </div>
+
+    <h1>¿Quieres ser mi San Valentín? 💘</h1>
+
+    <div class="buttons">
+      <button id="yes" onclick="yesClicked()">Sí 💖</button>
+      <button id="no" onclick="noClicked()">No 😳</button>
+    </div>
+  </div>
+
+  <script>
+    let scale = 1;
+    let noClickCount = 0;
+    const noTexts = [
+      "¿Segura? 🤔",
+      "¿De verdad? 😢",
+      "¿En serio? 💔",
+      "Piénsalo bien 🥺",
+      "¿Me vas a romper el corazón? 😭",
+      "No me hagas esto 😩",
+      "Dale, di que sí 🙏",
+      "Ya casi no me ves... 🫣",
+      "Última oportunidad 😤",
+      "Ok ya no hay No 👋"
+    ];
+
+    function noClicked() {
+      const yesBtn = document.getElementById("yes");
+      const noBtn = document.getElementById("no");
+      const buttonsDiv = document.querySelector(".buttons");
+
+      noBtn.textContent = noTexts[Math.min(noClickCount, noTexts.length - 1)];
+      noClickCount++;
+
+      scale += 0.07;
+      yesBtn.style.transform = `translateX(-50%) scale(${scale})`;
+
+      const containerRect = buttonsDiv.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = containerRect.width - btnRect.width;
+      const maxY = containerRect.height - btnRect.height;
+
+      const randomX = Math.max(0, Math.random() * maxX);
+      const randomY = Math.max(0, Math.random() * maxY);
+
+      noBtn.style.right = "auto";
+      noBtn.style.left = `${randomX}px`;
+      noBtn.style.top = `${randomY}px`;
+
+      if (noClickCount >= noTexts.length) {
+        noBtn.style.opacity = 0;
+        noBtn.style.pointerEvents = "none";
+        yesBtn.style.transform = `translateX(-50%) scale(6)`;
+      }
+    }
+
+    function yesClicked() {
+      document.body.innerHTML = `
+        <div id="finalScreen" style="
+          height:100vh;
+          display:flex;
+          flex-direction:column;
+          justify-content:center;
+          align-items:center;
+          text-align:center;
+          background:white;
+          color:#ff3b6f;
+          font-family:Arial;
+          padding:20px;
+          overflow:hidden;
+        ">
+          <div id="finalVideo" style="
+            width:90%;
+            max-width:340px;
+            border-radius:20px;
+            overflow:hidden;
+            opacity:0;
+            transform:translateY(-40px);
+            transition:opacity 0.8s ease, transform 0.8s ease;
+            margin-bottom:30px;
+          ">
+            <video src="video.mp4" autoplay loop muted playsinline
+              style="width:100%;height:auto;display:block;border-radius:20px;">
+            </video>
+          </div>
+          <h1 id="finalText" style="
+            font-size:42px;
+            margin:0;
+            transition:transform 0.8s ease, font-size 0.8s ease;
+          ">
+            💖 ¡Eso! Sabía que dirías que sí 💖
+          </h1>
+        </div>
+      `;
+
+      setTimeout(function () {
+        var finalVideo = document.getElementById("finalVideo");
+        var finalText = document.getElementById("finalText");
+        finalVideo.style.opacity = "1";
+        finalVideo.style.transform = "translateY(0)";
+        finalText.style.fontSize = "28px";
+        finalText.innerHTML = "💖 ¡Eso! Sabía que dirías que sí 💖<br><br>Te amo 😘";
+      }, 1000);
+    }
+  </script>
+
+</body>
+</html>
